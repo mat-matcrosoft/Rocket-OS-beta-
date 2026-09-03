@@ -34,9 +34,9 @@ start:
     jmp .print_title
 
 .load:
-    xor ax, ax
+    mov ax, PAYLOAD_SEGMENT
     mov es, ax
-    mov bx, PAYLOAD_SEGMENT * 16
+    xor bx, bx                  ; ES:BX = physical 0x10000
     mov word [current_sector], 2
     mov byte [current_head], 0
     mov word [current_cylinder], 0

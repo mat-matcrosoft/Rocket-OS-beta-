@@ -1,9 +1,9 @@
-AS ?= nasm
-CC ?= i686-elf-gcc
-LD ?= i686-elf-ld
-OBJCOPY ?= i686-elf-objcopy
-QEMU ?= qemu-system-i386
-CFLAGS ?= -m32 -ffreestanding -fno-pie -fno-stack-protector -nostdlib -nostdinc -Wall -Wextra -I.
+AS := nasm
+CC := i686-elf-gcc
+LD := i686-elf-ld
+OBJCOPY := i686-elf-objcopy
+QEMU := qemu-system-i386
+CFLAGS ?= -m32 -ffreestanding -fno-pie -fno-stack-protector -nostdlib -Wall -Wextra -I.
 LDFLAGS ?= -m elf_i386 -T tools/linker.ld
 BUILD := build
 

@@ -10,7 +10,7 @@ start:
     mov eax, cr0
     or eax, 1
     mov cr0, eax
-    jmp 0x08:protected_entry
+    jmp dword 0x08:protected_entry
 
 BITS 32
 protected_entry:
