@@ -1,16 +1,19 @@
 ; ROCKET-OS stage 1: enter 32-bit protected mode
 BITS 16
-ORG 0x10000
+ORG 0
 
 start:
     cli
-    xor ax, ax
+    mov ax, 0x1000             ; stage 1 is loaded at physical 0x10000
     mov ds, ax
     lgdt [gdt_descriptor]
     mov eax, cr0
     or eax, 1
     mov cr0, eax
-    jmp dword 0x08:protected_entry
+    ; 16-bit mode needs an operand-size override for a 32-bit physical EIP.
+    db 0x66, 0xEA
+    dd 0x10000 + protected_entry
+    dw 0x08
 
 BITS 32
 protected_entry:
@@ -36,4 +39,4 @@ gdt_end:
 
 gdt_descriptor:
     dw gdt_end - gdt_start - 1
-    dd gdt_start
+    dd 0x10000 + gdt_start
