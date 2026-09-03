@@ -2,6 +2,7 @@ AS := nasm
 CC := i686-elf-gcc
 LD := i686-elf-ld
 OBJCOPY := i686-elf-objcopy
+HOST_CC ?= cc
 QEMU := qemu-system-i386
 CFLAGS ?= -m32 -ffreestanding -fno-pie -fno-stack-protector -nostdlib -Wall -Wextra -I.
 LDFLAGS ?= -m elf_i386 -T tools/linker.ld
@@ -48,8 +49,8 @@ run: image
     $(QEMU) -drive format=raw,file=$(BUILD)/rocket-os.img
 clean:
     rm -rf $(BUILD)
-test:
-    $(CC) -std=c11 -Wall -Wextra -I. tests/test_fat32.c fs/fat32.c -o $(BUILD)/test_fat32
+test: $(BUILD)
+    $(HOST_CC) -std=c11 -Wall -Wextra -I. tests/test_fat32.c fs/fat32.c -o $(BUILD)/test_fat32
     $(BUILD)/test_fat32
-    $(CC) -std=c11 -Wall -Wextra -I. tests/test_shell.c kernel/shell.c -o $(BUILD)/test_shell
+    $(HOST_CC) -std=c11 -Wall -Wextra -I. tests/test_shell.c kernel/shell.c -o $(BUILD)/test_shell
     $(BUILD)/test_shell
