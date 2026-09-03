@@ -1,0 +1,14 @@
+#ifndef ROCKET_CONFIG_H
+#define ROCKET_CONFIG_H
+
+#define ROCKET_OS_NAME "ROCKET-OS"
+#define ROCKET_OS_VERSION "0.1.0-alpha"
+#define VGA_WIDTH 80
+#define VGA_HEIGHT 25
+#define VGA_MEMORY 0xB8000
+#define KERNEL_LOAD_ADDRESS 0x11000
+#define KERNEL_STACK_TOP 0x90000
+#define RBE_MAGIC 0x31454252u /* little-endian RBE1 */
+#define RBE_VERSION 1u
+
+#endif

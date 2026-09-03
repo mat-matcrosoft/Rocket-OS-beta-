@@ -1,0 +1,9 @@
+build/
+*.img
+*.bin
+*.elf
+*.o
+*.map
+*.rbe
+.vscode/
+.idea/
