@@ -4,6 +4,8 @@ LD := i686-elf-ld
 OBJCOPY := i686-elf-objcopy
 HOST_CC ?= cc
 QEMU := qemu-system-i386
+XORRISO ?= xorriso
+ISO := $(BUILD)/rocket-os-v1.0.0-prebeta.iso
 CFLAGS ?= -m32 -ffreestanding -fno-pie -fno-stack-protector -nostdlib -Wall -Wextra -I.
 LDFLAGS ?= -m elf_i386 -T tools/linker.ld
 BUILD := build
@@ -42,9 +44,13 @@ $(BUILD)/rocket-os.img: $(BUILD)/boot/boot.bin $(BUILD)/stage/stage1.pad $(BUILD
 	cat $^ > $@
 	truncate -s $$((128 * 512)) $@
 
-.PHONY: all image run clean test
+.PHONY: all image iso run clean test
 all: image
 image: $(BUILD)/rocket-os.img
+iso: $(ISO)
+
+$(ISO): $(BUILD)/rocket-os.img
+	$(XORRISO) -as mkisofs -o $@ -V ROCKETOS_PREBETA -iso-level 3 -b $(BUILD)/rocket-os.img -hard-disk-boot .
 run: image
 	$(QEMU) -drive format=raw,file=$(BUILD)/rocket-os.img
 clean:
