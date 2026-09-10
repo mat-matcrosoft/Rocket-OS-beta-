@@ -4,30 +4,30 @@ ROCKET-OS is a small DOS-like x86 operating-system experiment written in C and N
 
 ## Quick start
 
-Read the complete build and FAT32 roadmap in docs/BUILD.md. The short path is:
-
     make image
     make run
     make test
 
-Required tools for the current boot image are NASM, GNU Make, an i386 freestanding GCC/binutils toolchain, and QEMU. A host C compiler is also needed for the smoke tests. The default cross tools are i686-elf-gcc, i686-elf-ld, and i686-elf-objcopy; override them on the command line when your environment uses different names.
+Required tools are NASM, GNU Make, an i386 freestanding GCC/binutils toolchain, QEMU, and a host C compiler for smoke tests. Override the cross tools when needed:
 
     make CC=gcc LD=ld OBJCOPY=objcopy image
     make HOST_CC=cc test
 
-## Current boot image and FAT32 status
+## Storage status
 
-The current image is a fixed-size raw BIOS image. Stage 0 reads a bounded contiguous payload with BIOS CHS calls, Stage 1 enters protected mode, and the kernel starts the VGA shell. It is intentionally not yet a FAT32 filesystem image. The FAT32 data structures and cluster arithmetic are isolated in fs/ so the next Stage 2 loader can be added without changing the kernel shell ABI.
+The kernel now includes a block-device manager, driver manager, ATA PIO support for the primary IDE master/slave with LBA28, and a FAT32 volume implementation. FAT32 validates the BPB, follows bounded cluster chains, lists directories, reads short 8.3 files, and replaces an existing file when its current cluster chain is large enough. The kernel mounts ata0 when a FAT32 superfloppy is present at LBA 0.
 
-The planned FAT32 flow is documented in docs/BUILD.md and docs/DESIGN.md: read the BPB, locate the FAT and root directory, resolve 8.3/LFN names, follow cluster chains, load KERNEL.BIN, then transfer control to the protected-mode kernel.
+The BIOS image is still the original fixed-size development image: Stage 0 reads a bounded contiguous payload and Stage 1 enters protected mode. The next boot milestone is a FAT32 Stage 2 loader; the in-kernel storage stack is ready for that work.
+
+See docs/STORAGE.md for the interfaces and current limitations.
 
 ## Shell
 
-The alpha shell includes help, clear, about, echo, ls, cat, mkdir, rmdir, touch, rm, cp, mv, load, and run. Filesystem and RBE commands report their scaffold status until the FAT32 block device and user-mode loader milestones are completed.
+The shell includes help, clear, about, devices, ls, cat, and write. FAT32 path lookup currently uses short 8.3 names; LFN entries are ignored until checksum-validated LFN support is added.
 
 ## Layout
 
-boot/ and stage/ contain the BIOS boot path; kernel/ contains the protected-mode kernel and VGA shell; fs/ contains FAT32 structures; rbe/ defines the RBE1 format; api/ contains the application ABI; apps/ contains example clients; tests/ contains host-side smoke tests; docs/ contains the architecture, API, and build roadmap.
+boot/ and stage/ contain the BIOS boot path; kernel/ contains the protected-mode kernel and VGA shell; drivers/ contains device and driver managers plus ATA PIO; fs/ contains the FAT32 volume and directory API; rbe/ defines the RBE1 format; api/ contains the application ABI; apps/ contains example clients; tests/ contains host-side smoke tests; docs/ contains architecture and storage documentation.
 
 ## License
 
