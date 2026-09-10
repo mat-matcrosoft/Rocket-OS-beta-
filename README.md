@@ -32,3 +32,7 @@ boot/ and stage/ contain the BIOS boot path; kernel/ contains the protected-mode
 ## License
 
 The repository keeps its existing BSD-3-Clause license.
+
+## Windows and v86
+
+Для сборки в Windows через WSL2 и запуска ISO в браузерном v86 см. docs/WINDOWS.md.
